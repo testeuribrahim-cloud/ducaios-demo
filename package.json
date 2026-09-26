@@ -1,0 +1,16 @@
+{
+  "name": "ducaios-demo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Petite application de démonstration sur laquelle travaille l'agent Coding de DucAiOs.",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT"
+}
