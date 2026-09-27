@@ -15,6 +15,12 @@ after(() => new Promise((resolve) => server.close(resolve)));
 const post = (path, body) =>
   fetch(`${base}${path}`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
 
+test("GET /health renvoie 200 et {status: ok}", async () => {
+  const res = await fetch(`${base}/health`);
+  assert.equal(res.status, 200);
+  assert.deepEqual(await res.json(), { status: "ok" });
+});
+
 test("GET /todos renvoie une liste vide au départ", async () => {
   const res = await fetch(`${base}/todos`);
   assert.equal(res.status, 200);
