@@ -17,11 +17,12 @@ async function readJson(req) {
   return raw === "" ? {} : JSON.parse(raw);
 }
 
-/** L'application HTTP : GET /todos, POST /todos, POST /todos/:id/complete. */
+/** L'application HTTP : GET /health, GET /todos, POST /todos, POST /todos/:id/complete. */
 export function createApp(todos = new TodoList()) {
   return createServer(async (req, res) => {
     const url = new URL(req.url ?? "/", "http://localhost");
     try {
+      if (req.method === "GET" && url.pathname === "/health") return send(res, 200, { status: "ok" });
       if (req.method === "GET" && url.pathname === "/todos") return send(res, 200, todos.list());
       if (req.method === "POST" && url.pathname === "/todos") {
         const body = await readJson(req);
