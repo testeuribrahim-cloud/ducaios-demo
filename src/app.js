@@ -22,13 +22,14 @@ async function readJson(req) {
   return raw === "" ? {} : JSON.parse(raw);
 }
 
-/** L'application HTTP : GET /todos, POST /todos, POST /todos/:id/complete, GET /version, GET /ping. */
+/** L'application HTTP : GET /todos, POST /todos, POST /todos/:id/complete, GET /version, GET /ping, GET /about. */
 export function createApp(todos = new TodoList()) {
   return createServer(async (req, res) => {
     const url = new URL(req.url ?? "/", "http://localhost");
     try {
       if (req.method === "GET" && url.pathname === "/ping") return sendText(res, 200, "pong");
       if (req.method === "GET" && url.pathname === "/version") return send(res, 200, { version: "1.0.0" });
+      if (req.method === "GET" && url.pathname === "/about") return send(res, 200, { name: "ducaios-demo" });
       if (req.method === "GET" && url.pathname === "/todos") return send(res, 200, todos.list());
       if (req.method === "POST" && url.pathname === "/todos") {
         const body = await readJson(req);
