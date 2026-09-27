@@ -8,6 +8,11 @@ function send(res, status, body) {
   res.end(JSON.stringify(body));
 }
 
+function sendText(res, status, text) {
+  res.writeHead(status, { "content-type": "text/plain; charset=utf-8" });
+  res.end(text);
+}
+
 async function readJson(req) {
   let raw = "";
   for await (const chunk of req) {
@@ -17,11 +22,12 @@ async function readJson(req) {
   return raw === "" ? {} : JSON.parse(raw);
 }
 
-/** L'application HTTP : GET /todos, POST /todos, POST /todos/:id/complete, GET /version. */
+/** L'application HTTP : GET /todos, POST /todos, POST /todos/:id/complete, GET /version, GET /ping. */
 export function createApp(todos = new TodoList()) {
   return createServer(async (req, res) => {
     const url = new URL(req.url ?? "/", "http://localhost");
     try {
+      if (req.method === "GET" && url.pathname === "/ping") return sendText(res, 200, "pong");
       if (req.method === "GET" && url.pathname === "/version") return send(res, 200, { version: "1.0.0" });
       if (req.method === "GET" && url.pathname === "/todos") return send(res, 200, todos.list());
       if (req.method === "POST" && url.pathname === "/todos") {
